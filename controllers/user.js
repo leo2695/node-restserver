@@ -1,49 +1,81 @@
-const {
-    request,
-    response
-} = require('express');
+const {request,response} = require('express');
+const bcryptjs = require('bcryptjs');
+const Usuario = require('../models/usuario');
 
+const usuariosGet = async (req = request, res = response) => {
+    const{limite=5, desde=0}=req.query;
+    const queryEstado={estado:true};
 
-const usuariosGet = (req=request, res = response) => {
-    const {q, token,type='untype'}=req.query;
-    res.json({
-        message: 'GET API Controller',
-        q,
-        token,
-        type
-    });
+    const [totalRegistros,usuarios]=await Promise.all([ //destructuración de arreglos NO de objetos, el primero va ser el resultado de la primera prromesa, en orden posicional
+        Usuario.countDocuments(queryEstado),
+        Usuario.find(queryEstado)//eso es enviar una condicion
+            .limit(Number(limite))
+            .skip(Number(desde))
+
+    ]);
+
+    res.json({totalRegistros,usuarios});
 }
-const usuariosPut = (req=request, res = response) => {
-    const {
-        id
-    } = req.params;
-    res.json({
-        message: 'PUT API Controller',
-        id
-    });
+
+const usuariosPut = async (req = request, res = response) => {
+    const {id} = req.params;
+    const {_id,password,google,...actualizar} = req.body; //... esto se llama operador rest es como decir que quiero ese resto de cosas que no especifique
+
+    //validar con BD
+    if (password) {
+        //encriptar password
+        const salt = bcryptjs.genSaltSync();
+        actualizar.password = bcryptjs.hashSync(password, salt);
+    }
+
+    const usuarioDB=await Usuario.findByIdAndUpdate(id,actualizar);
+
+    res.json(usuarioDB);
 }
-const usuariosPost = (req=request, res = response) => {
+const usuariosPost = async (req = request, res = response) => {
+
+    //confirmar los errores de middlewares
 
     const {
         nombre,
-        edad
+        correo,
+        password,
+        rol
     } = req.body;
+    const usuario = new Usuario({
+        nombre,
+        correo,
+        password,
+        rol
+    }); //crear nueva instancia de mi Usuario
+
+    //encriptar password
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync(password, salt);
+
+    //guardar en BD
+    await usuario.save();
 
     res.json({
-        message: 'POST API Controller',
-        nombre,
-        edad
+        //message: 'POST API Controller',
+        usuario
     });
 }
-const usuariosPatch = (req=request, res = response) => {
+const usuariosPatch = (req = request, res = response) => {
     res.json({
         message: 'PATCH API Controller'
     });
 }
-const usuariosDelete = (req=request, res = response) => {
-    res.json({
-        message: 'DELETE API Controller'
-    });
+const usuariosDelete = async (req = request, res = response) => {
+    const { id }=req.params;
+
+    //Borrar Físicamente
+    //const usuario=await Usuario.findByIdAndDelete(id);
+
+    //Cambiar Estado Usuario
+    const usuario=await Usuario.findByIdAndUpdate(id, { estado:false});
+
+    res.json(usuario);
 }
 
 module.exports = {

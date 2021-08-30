@@ -11,12 +11,21 @@ const {
     usuariosDelete,
     usuariosPatch
 } = require('../controllers/user');
+
+
 const {
     esRolValido, existeEmail, existeUsuarioID
 } = require('../helpers/db-validators');
-const {
+
+
+/* const {
     validarCampos
 } = require('../middlewares/validar-campos');
+const { validarJWT } = require('../middlewares/validar-jwt');
+const { rolValido, tipoRolValido } = require('../middlewares/validar-rol'); */
+
+//en vez de exportar los middlewares
+const {validarCampos,validarJWT,tipoRolValido, rolValido} = require('../middlewares');
 
 const router = Router();
 
@@ -47,6 +56,9 @@ router.post('/', [
 
 //BORRAR
 router.delete('/:id',[
+    validarJWT, 
+    //rolValido,
+    tipoRolValido('ADMIN_ROLE','VENTAS_ROLES'),
     check('id','No es un ID válido').isMongoId(),
     check('id').custom(existeUsuarioID),
     validarCampos

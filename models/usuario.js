@@ -42,9 +42,11 @@ UsuarioSchema.methods.toJSON = function () {
     //tiene que ser una función normal, no puede ser flecha
     const {
         __v,
-        password,
+        password, _id,
         ...usuario
-    } = this.toObject();
+    } = this.toObject(); //acá los nombres que ponga especificamente no los veo en las respuestas de postman, solo los que deje en ...usuario
+    //transformarlo
+    usuario.uid=_id;
     return usuario;
 }
 

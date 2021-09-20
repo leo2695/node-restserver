@@ -16,7 +16,6 @@ const usuariosGet = async (req = request, res = response) => {
 
     res.json({totalRegistros,usuarios});
 }
-
 const usuariosPut = async (req = request, res = response) => {
     const {id} = req.params;
     const {_id,password,google,...actualizar} = req.body; //... esto se llama operador rest es como decir que quiero ese resto de cosas que no especifique

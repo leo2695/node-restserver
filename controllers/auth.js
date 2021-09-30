@@ -106,7 +106,7 @@ const googleSignIn = async (req = request, res = response) => {
     //console.log(googleUser);
     try {
 
-        res.json({message: 'Todo ok! google sign in'});
+        //res.json({message: 'Todo ok! google sign in'});
 
     } catch (error) {
         console.log(error);

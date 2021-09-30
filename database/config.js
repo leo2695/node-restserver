@@ -5,10 +5,10 @@ const dbConnection = async () => {
     try {
 
         await mongoose.connect(process.env.MONGODB_CNN, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false //para poder usar findByIdAndUpdate tengo que quitarlo, recomendacion de mongoose
+            //useNewUrlParser: true,
+            //useUnifiedTopology: true,
+            //useCreateIndex: true,
+            //useFindAndModify: false //para poder usar findByIdAndUpdate tengo que quitarlo, recomendacion de mongoose
         });
 
         console.log('BD Online');

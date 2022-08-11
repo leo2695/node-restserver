@@ -1,9 +1,7 @@
 const Rol = require('../models/rol');
 const Usuario = require('../models/usuario');
-const Categoria = require('../models/categoria');
-const {
-    Producto
-} = require('../models');
+const Categoria= require('../models/categoria');
+const { Producto } = require('../models');
 
 const esRolValido = async (rol = '') => {
     const existeRol = await Rol.findOne({
@@ -16,11 +14,9 @@ const esRolValido = async (rol = '') => {
 }
 
 //verificar si correo existe
-const existeEmail = async (correo = '') => {
-
-    const existeEmail = await Usuario.findOne({
-        correo
-    }); //va a buscar en el modelo un correo que sea igual al argumento que estoy enviando
+const existeEmail = async (correo='') => {
+    
+    const existeEmail = await Usuario.findOne({correo}); //va a buscar en el modelo un correo que sea igual al argumento que estoy enviando
 
     if (existeEmail) {
         throw new Error(`El correo: ${correo} ya existe`);
@@ -28,8 +24,8 @@ const existeEmail = async (correo = '') => {
 }
 
 //verificar si existe el usuario por id
-const existeUsuarioID = async (id = '') => {
-
+const existeUsuarioID = async (id='') => {
+    
     const existeUsuario = await Usuario.findById(id); //va a buscar en el modelo un correo que sea igual al argumento que estoy enviando
 
     if (!existeUsuario) {
@@ -38,33 +34,33 @@ const existeUsuarioID = async (id = '') => {
 }
 
 //Verificar si existe la categoria por id
-const existeCategoriaBD = async (id = '') => {
+const existeCategoriaBD= async (id='')=>{
 
-    const existeCategoria = await Categoria.findById(id);
+    const existeCategoria=await Categoria.findById(id);
 
     if (!existeCategoria) {
         throw new Error(`La categoría con el id: ${id}, no existe`)
-
+        
     }
 }
 
 //Verificar si existe el producto por id
-const existeProductoBD = async (id = '') => {
+const existeProductoBD= async (id='')=>{
 
-    const existeProducto = await Producto.findById(id);
+    const existeProducto=await Producto.findById(id);
 
     if (!existeProducto) {
         throw new Error(`El producto con el id: ${id}, no existe`)
-
+        
     }
 }
 
 //Validar las colecciones permitidas
-const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
+const coleccionesPermitidas=(coleccion='',colecciones=[])=>{
 
-    const incluida = colecciones.includes(coleccion);
-
-    if (!incluida) {
+    const incluida=colecciones.includes(coleccion);
+    
+    if(!incluida){
         throw new Error(`La colección ${coleccion} no es permitida`);
     }
 

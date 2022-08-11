@@ -6,7 +6,7 @@ const usuariosGet = async (req = request, res = response) => {
     const{limite=5, desde=0}=req.query;
     const queryEstado={estado:true};
 
-    const [totalRegistros,usuarios]=await Promise.all([ //destructuración de arreglos NO de objetos, el primero va ser el resultado de la primera prromesa, en orden posicional
+    const [totalRegistros,usuarios]=await Promise.all([ //destructuración de arreglos NO de objetos, el primero va ser el resultado de la primera promesa, en orden posicional de como se escribio el codigo no del orden en como se resuelvan en la ejecucion
         Usuario.countDocuments(queryEstado),
         Usuario.find(queryEstado)//eso es enviar una condicion
             .limit(Number(limite))
@@ -33,19 +33,21 @@ const usuariosPut = async (req = request, res = response) => {
 }
 const usuariosPost = async (req = request, res = response) => {
 
-    //confirmar los errores de middlewares
-
     const {
+        identificacion,
         nombre,
         correo,
         password,
-        rol
+        rol,
+        fechaNacimiento
     } = req.body;
     const usuario = new Usuario({
+        identificacion,
         nombre,
         correo,
         password,
-        rol
+        rol,
+        fechaNacimiento
     }); //crear nueva instancia de mi Usuario
 
     //encriptar password
@@ -72,6 +74,7 @@ const usuariosDelete = async (req = request, res = response) => {
 
     //Borrar Físicamente
     //const usuario=await Usuario.findByIdAndDelete(id);
+    //res.json(usuario);
 
     //Cambiar Estado Usuario
     const usuario=await Usuario.findByIdAndUpdate(id, { estado:false});
